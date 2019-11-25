@@ -39,7 +39,7 @@ class Instance:
                     self.adj_matrix[int(i)][int(j)] = float(k) #Preenche a matriz de forma simétrica
                     self.adj_matrix[int(j)][int(i)] = float(k)
 
-            except Exception as e: #Deu erro!!
+            except Exception as e: #Deu erro!! Imprima o erro/exceção
                 print(repr(e))
 
 if __name__ == "__main__":
