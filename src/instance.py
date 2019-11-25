@@ -10,7 +10,7 @@ class Instance:
     
     def __read_instance(self, path):
         with open(path) as f:
-            try:
+            try: #Tente
                 params = f.readline().split()
                 self.number_itens = int(params[0]) #Primeiro parâmetro do arquivo - número de itens totais a serem divididos
                 self.number_groups = int(params[1]) #Número de grupos a serem criados
@@ -39,7 +39,7 @@ class Instance:
                     self.adj_matrix[int(i)][int(j)] = float(k) #Preenche a matriz de forma simétrica
                     self.adj_matrix[int(j)][int(i)] = float(k)
 
-            except Exception as e: #Não entendi
+            except Exception as e: #Deu erro!!
                 print(repr(e))
 
 if __name__ == "__main__":
