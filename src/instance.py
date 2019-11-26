@@ -1,5 +1,5 @@
 class Instance:
-    number_itens = 0 #Inicializa o número de itens
+    number_items = 0 #Inicializa o número de items
     number_groups = 0 #Inicializa o número de grupos
     adj_matrix = [] #Matriz de diversidade
     group_bounds = [] #Tamanho dos grupos
@@ -12,7 +12,7 @@ class Instance:
         with open(path) as f:
             try:
                 params = f.readline().split()
-                self.number_itens = int(params[0]) #Primeiro parâmetro do arquivo - número de itens totais a serem divididos
+                self.number_items = int(params[0]) #Primeiro parâmetro do arquivo - número de items totais a serem divididos
                 self.number_groups = int(params[1]) #Número de grupos a serem criados
                 self.group_size_type = params[2] #Grupos de tamanho homogeneos (ss) ou tamanhos variados (ds) 
             
@@ -32,7 +32,7 @@ class Instance:
                 if self.number_groups != len(self.group_bounds): #Aponta incoerência no número de grupos
                     raise Exception("Number of groups and number of bounds don't match", self.number_groups, len(self.group_bounds))                
 
-                self.adj_matrix = [[0]*self.number_itens for i in range(self.number_itens)] #Inicializa a matriz em zeros?? Diagonal principal??
+                self.adj_matrix = [[0]*self.number_items for i in range(self.number_items)] #Inicializa a matriz em zeros?? Diagonal principal??
 
                 for line in f: #Ler as linhas das instância - i,j e dij
                     i, j, k = line.split()
@@ -41,7 +41,3 @@ class Instance:
 
             except Exception as e: #Não entendi
                 print(repr(e))
-
-if __name__ == "__main__":
-    instance = Instance('../data/mdgplib/Geo/Geo_n010_ds_01.txt')
-    print(instance.number_itens, instance.number_groups) #Imprime número de itens e número de grupos

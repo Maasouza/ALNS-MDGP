@@ -1,12 +1,12 @@
 class Group:
     
-    def __init__(self, min_items, max_items, items = set(), obj = 0):
+    def __init__(self, min_items, max_items):
         
         self.min_items = min_items
         self.max_items = max_items
-        self.items = items
+        self.items = set()
         self.num_items = len(self.items)
-        self.obj_value = obj
+        self.obj_value = 0
 
     def add_item(self, item, item_diversity):
         
@@ -23,23 +23,22 @@ class Group:
             self.obj_value -= item_diversity[i]
 
     def is_valid(self):
-
         if self.num_items >= self.min_items and self.num_items <= self.max_items:
             return True
         else:
             return False
-        
 
 class Solution:
 
-    def __init__(self, items, num_groups, groups_bounds, groups = [], obj_value = 0):
-        self.unused_items = items
+    def __init__(self, num_groups, groups_bounds, groups = [], obj_value = 0):
         self.num_groups = num_groups
         self.groups = groups
         self.obj_value = obj_value
-
-        for min_items, max_items in groups_bounds :
-            self.groups.append(Group(min_items, max_items))
+        if groups == []:
+            for min_items, max_items in groups_bounds :
+                self.groups.append(Group(min_items, max_items))
+        else:
+            self.update_obj_value()
 
     def update_obj_value(self):
         self.obj_value = 0
@@ -50,10 +49,13 @@ class Solution:
         valid_groups = 1
         for group in self.groups:
             valid_groups *= group.is_valid()
+        return valid_groups
 
-        if len(self.unused_items) == 0 and valid_groups:
-            return True
-        else:
-            return False
-
-        
+    def __repr__(self):
+        print("Diversidade ", self.obj_value)
+        print("Groupos:")
+        for idx, group in enumerate(self.groups):
+            print("\tGrupo "+str(idx))
+            print("\tDiversidade "+str(group.obj_value))
+            print("\t",group.items)
+        return ""
