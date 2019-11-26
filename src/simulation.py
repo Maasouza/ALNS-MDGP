@@ -45,7 +45,7 @@ class ALNS:
                     select_group+=1
 
             if j not in used_items:
-                if not groups[select_group].add_item_if_viable(j, self.instance.adj_matrix[j])
+                if not groups[select_group].add_item_if_viable(j, self.instance.adj_matrix[j]):
                     select_group+=1
         for idx, group in enumerate(groups):
             if not group.is_valid():
