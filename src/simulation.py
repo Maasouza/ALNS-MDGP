@@ -20,9 +20,7 @@ class ALNS:
             included = False
             while not included:
                 idx = random.choices(range(self.instance.number_groups))[0]
-                if groups[idx].num_items + 1 <= groups[idx].max_items:
-                    included = True
-                    groups[idx].add_item(i, self.instance.adj_matrix[i])
+                included = groups[idx].add_item_if_viable(i, self.instance.adj_matrix[i])
 
         self.current_solution = Solution(self.instance.number_groups, self.instance.group_bounds, groups)
 
@@ -43,15 +41,11 @@ class ALNS:
         select_group = 0
         for i, j, k in pairs:
             if i not in used_items:
-                if groups[select_group].num_items + 1 <= groups[select_group].max_items:
-                    group_bounds[select_group].add_item(i, self.instance.adj_matrix[i])
-                else:
+                if not groups[select_group].add_item_if_viable(i, self.instance.adj_matrix[i]):
                     select_group+=1
 
             if j not in used_items:
-                if groups[select_group].num_items + 1 <= groups[select_group].max_items:
-                    group_bounds[select_group].add_item(j, self.instance.adj_matrix[j])
-                else:
+                if not groups[select_group].add_item_if_viable(j, self.instance.adj_matrix[j])
                     select_group+=1
         for idx, group in enumerate(groups):
             if not group.is_valid():

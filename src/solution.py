@@ -8,6 +8,13 @@ class Group:
         self.num_items = len(self.items)
         self.obj_value = 0
 
+    def add_item_if_viable(self, item, item_diversity):
+        if self.num_items + 1 <= self.max_items:
+            self.add_item(item, item_diversity)
+            return True
+        else:
+            return False
+
     def add_item(self, item, item_diversity):
         
         for i in self.items:
