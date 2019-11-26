@@ -31,25 +31,38 @@ class ALNS:
             groups.append(Group(lower_bound, upper_bound))
 
         pairs = []
-        for i in range(instance.num_items-1):
-            for j in range(i+1, instance.num_items):
-                pairs.append((i,j,instance.adj_matrix[i][j]))
-        pairs.sort(key=lambda x: x[2])
-
+        for i in range(self.instance.number_items-1):
+            for j in range(i+1, self.instance.number_items):
+                pairs.append((i,j,self.instance.adj_matrix[i][j]))
+       
+        pairs.sort(key=lambda x: x[2], reverse=True)
         used_items = set()
-
         select_group = 0
-        for i, j, k in pairs:
+        for i, j, _ in pairs:
             if i not in used_items:
-                if not groups[select_group].add_item_if_viable(i, self.instance.adj_matrix[i]):
+                if groups[select_group].add_item_if_viable(i, self.instance.adj_matrix[i]):
+                    used_items.add(i)
+                else:
                     select_group+=1
 
             if j not in used_items:
-                if not groups[select_group].add_item_if_viable(j, self.instance.adj_matrix[j]):
+                if groups[select_group].add_item_if_viable(j, self.instance.adj_matrix[j]):
+                    used_items.add(j)
+                else:
                     select_group+=1
         for idx, group in enumerate(groups):
             if not group.is_valid():
-                pass
+                missing = groups[idx].min_items - groups[idx].num_items
+                helper_idx = idx - 1
+                while missing:
+                    helper_item = min(groups[helper_idx].items.items(), key=lambda x:x[1])[0]
+                    if groups[helper_idx].remove_item_if_viable(helper_item, self.instance.adj_matrix[helper_item]):
+                        groups[idx].add_item_if_viable(helper_item, self.instance.adj_matrix[helper_item])
+                        missing -= 1
+                    else:
+                        helper_idx -= 1
+        
+        self.current_solution = Solution(self.instance.number_groups, self.instance.group_bounds, groups)
                 
 
     def local_search(self, solution):
