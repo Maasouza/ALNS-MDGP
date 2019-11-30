@@ -63,7 +63,6 @@ class ALNS:
                         helper_idx -= 1
         
         self.current_solution = Solution(self.instance.number_groups, self.instance.group_bounds, groups)
-                
 
     def local_search(self, solution):
         pass
