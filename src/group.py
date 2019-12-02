@@ -6,6 +6,9 @@ class Group:
         self.items = dict()
         self.num_items = len(self.items)
         self.obj_value = 0
+        self.best_item = None
+        self.worst_item = None
+
 
     def add_item_if_viable(self, item, item_diversity):
         if self.num_items + 1 <= self.max_items:
@@ -14,17 +17,27 @@ class Group:
             return False
 
     def add_item(self, item, item_diversity):
+        max_contribution = -float('inf')
+        min_contribution = float('inf')
+
         if item in self.items:
             return False
         item_contribution = 0
         for i in self.items:
             self.items[i] += item_diversity[i]
+            
+            self.update_best_and_worst(i, self.items[i], min_contribution, max_contribution)
+
             item_contribution += item_diversity[i] 
             
+        self.update_best_and_worst(item, item_contribution, min_contribution, max_contribution)
+
         self.num_items += 1
         self.obj_value += item_contribution
         self.items[item] = item_contribution
+
         return True
+
 
     def remove_item_if_viable(self, item, item_diversity):
         if self.num_items - 1 >= self.min_items:
@@ -33,6 +46,9 @@ class Group:
             return False
 
     def remove_item(self, item, item_diversity):
+        max_contribution = -float('inf')
+        min_contribution = float('inf')
+
         if item not in self.items:
             return False
         self.obj_value -= self.items[item]
@@ -40,6 +56,7 @@ class Group:
         self.num_items -= 1
         for i in self.items:
             self.items[i] -= item_diversity[i]
+            self.update_best_and_worst(i, self.items[i], min_contribution, max_contribution)
         return True
 
     def is_valid(self):
@@ -47,3 +64,10 @@ class Group:
             return True
         else:
             return False
+
+    def update_best_and_worst(self, item, item_contribution, min_contribution, max_contribution):
+
+        if item_contribution <= min_contribution :
+                self.worst_item = item
+        if item_contribution >= max_contribution :
+                self.best_item = item

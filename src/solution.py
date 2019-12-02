@@ -25,10 +25,10 @@ class Solution:
 
     def __repr__(self):
         print("Diversidade ", self.obj_value)
-        print("Groupos:")
-        for idx, group in enumerate(self.groups):
-            print("\tGrupo "+str(idx))
-            print("\tDiversidade "+str(group.obj_value))
-            print("\tContribuição individual")
-            print("\t",group.items)
+        # print("Groupos:")
+        # for idx, group in enumerate(self.groups):
+        #     print("\tGrupo "+str(idx))
+        #     print("\tDiversidade "+str(group.obj_value))
+        #     print("\tContribuição individual")
+        #     print("\t",group.items)
         return ""

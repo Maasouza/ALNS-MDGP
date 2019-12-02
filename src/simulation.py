@@ -55,7 +55,7 @@ class ALNS:
                 missing = groups[idx].min_items - groups[idx].num_items
                 helper_idx = idx - 1
                 while missing:
-                    helper_item = min(groups[helper_idx].items.items(), key=lambda x:x[1])[0]
+                    helper_item = groups[helper_idx].worst_item
                     if groups[helper_idx].remove_item_if_viable(helper_item, self.instance.adj_matrix[helper_item]):
                         groups[idx].add_item_if_viable(helper_item, self.instance.adj_matrix[helper_item])
                         missing -= 1
@@ -64,6 +64,36 @@ class ALNS:
         
         self.current_solution = Solution(self.instance.number_groups, self.instance.group_bounds, groups)
 
-    def local_search(self, solution):
-        pass
+    def greedy_solution_2(self):
+
+        groups = []
+        for i in range(self.instance.number_groups):
+            lower_bound, upper_bound = self.instance.group_bounds[i]
+            groups.append(Group(lower_bound, upper_bound))
+
+        mean_diversity = []
+        for item, item_diversity in enumerate(self.instance.adj_matrix):
+            mean_diversity.append( (item, sum(item_diversity) / float( len(item_diversity) - 1) ) )
+
+        mean_diversity.sort(key=lambda x:x[1], reverse = True) 
+       
+        select_group = 0
+        for i, _ in mean_diversity:
+            if not groups[select_group].add_item_if_viable(i, self.instance.adj_matrix[i]):
+               select_group+=1
+            
+        for idx, group in enumerate(groups):
+            if not group.is_valid():
+                missing = groups[idx].min_items - groups[idx].num_items
+                helper_idx = idx - 1
+                while missing:
+                    helper_item = groups[helper_idx].worst_item
+                    if groups[helper_idx].remove_item_if_viable(helper_item, self.instance.adj_matrix[helper_item]):
+                        groups[idx].add_item_if_viable(helper_item, self.instance.adj_matrix[helper_item])
+                        missing -= 1
+                    else:
+                        helper_idx -= 1
+        
+        self.current_solution = Solution(self.instance.number_groups, self.instance.group_bounds, groups)
+
         
