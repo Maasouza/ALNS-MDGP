@@ -97,3 +97,31 @@ class ALNS:
         self.current_solution = Solution(self.instance.number_groups, self.instance.group_bounds, groups)
 
         
+
+    def greedy_solution_3(self):
+        
+        groups = []
+        for i in range(self.instance.number_groups):
+            lower_bound, upper_bound = self.instance.group_bounds[i]
+            groups.append(Group(lower_bound, upper_bound))
+
+        mean_diversity = []
+        for item, item_diversity in enumerate(self.instance.adj_matrix):
+            mean_diversity.append( (item, sum(item_diversity) / float( len(item_diversity) - 1) ) )
+
+        mean_diversity.sort(key=lambda x:x[1], reverse = True)
+
+        for i in len(self.instance.number_groups):
+            #adiciona os utimos em cada grupo
+            groups[i].add_item_if_viable(mean_diversity.pop()[0])
+        
+        for item, _ in mean_diversity:
+            evaluated_gains = []
+            for i, group in enumerate(groups):
+                evaluated_gains.append(i, group.evaluate_item)
+
+
+
+
+
+       

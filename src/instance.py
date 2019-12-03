@@ -1,11 +1,12 @@
 class Instance:
-    number_items = 0 #Inicializa o número de items
-    number_groups = 0 #Inicializa o número de grupos
-    adj_matrix = [] #Matriz de diversidade
-    group_bounds = [] #Tamanho dos grupos
-    group_size_type = None #Tipo de tamanhos de grupos
+
 
     def __init__(self, path):
+        self.number_items = 0 #Inicializa o número de items
+        self.number_groups = 0 #Inicializa o número de grupos
+        self.adj_matrix = [] #Matriz de diversidade
+        self.group_bounds = [] #Tamanho dos grupos
+        self.group_size_type = None #Tipo de tamanhos de grupos
         self.__read_instance(path)
     
     def __read_instance(self, path):

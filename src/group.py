@@ -38,6 +38,16 @@ class Group:
 
         return True
 
+    def evaluate_item_addition(self, item, item_diversity):
+        
+        item_contribution = 0
+
+        for i in self.items:
+            item_contribution += item_diversity[i] 
+
+        return item_contribution
+
+        
 
     def remove_item_if_viable(self, item, item_diversity):
         if self.num_items - 1 >= self.min_items:
@@ -64,6 +74,9 @@ class Group:
             return True
         else:
             return False
+
+    def can_add_item(self):
+        return self.num_items<self.max_items
 
     def update_best_and_worst(self, item, item_contribution, min_contribution, max_contribution):
 

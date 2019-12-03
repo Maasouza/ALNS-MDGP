@@ -4,7 +4,7 @@ from solution import *
 
 
 if __name__ == "__main__":
-    instance = Instance('../data/mdgplib/Geo/Geo_n960_ds_01.txt')
+    instance = Instance('../data/mdgplib/RanReal/RanReal_n240_ss_09.txt')
     alns = ALNS(instance)
     alns.generate_random_solution()
     print(alns.current_solution)
