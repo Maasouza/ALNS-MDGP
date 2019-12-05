@@ -1,1 +1,0 @@
-SomeCommand: command not found
