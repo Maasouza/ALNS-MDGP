@@ -38,16 +38,14 @@ class Group:
 
         return True
 
-    def evaluate_item_addition(self, item, item_diversity):
+    def evaluate_item(self, item, item_diversity):
         
         item_contribution = 0
 
         for i in self.items:
             item_contribution += item_diversity[i] 
 
-        return item_contribution
-
-        
+        return float(item_contribution)/float(len(self.items))
 
     def remove_item_if_viable(self, item, item_diversity):
         if self.num_items - 1 >= self.min_items:
@@ -84,3 +82,6 @@ class Group:
                 self.worst_item = item
         if item_contribution >= max_contribution :
                 self.best_item = item
+
+    def __repr__(self):
+        return "("+str(self.min_items)+","+str(self.max_items)+")  -  ("+str(self.num_items)+")"

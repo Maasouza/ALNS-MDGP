@@ -1,5 +1,6 @@
 from instance import *
 from solution import *
+from queue import PriorityQueue
 import random
 
 class ALNS:
@@ -79,7 +80,7 @@ class ALNS:
        
         select_group = 0
         for i, _ in mean_diversity:
-            if not groups[select_group].add_item_if_viable(i, self.instance.adj_matrix[i]):
+            while not groups[select_group].add_item_if_viable(i, self.instance.adj_matrix[i]):
                select_group+=1
             
         for idx, group in enumerate(groups):
@@ -98,7 +99,7 @@ class ALNS:
 
         
 
-    def greedy_solution_3(self):
+    def greedy_solution_3(self, bestFirst):
         
         groups = []
         for i in range(self.instance.number_groups):
@@ -109,16 +110,38 @@ class ALNS:
         for item, item_diversity in enumerate(self.instance.adj_matrix):
             mean_diversity.append( (item, sum(item_diversity) / float( len(item_diversity) - 1) ) )
 
-        mean_diversity.sort(key=lambda x:x[1], reverse = True)
+        mean_diversity.sort(key=lambda x:x[1], reverse = bestFirst)
 
-        for i in len(self.instance.number_groups):
+        for i in range(self.instance.number_groups):
             #adiciona os utimos em cada grupo
-            groups[i].add_item_if_viable(mean_diversity.pop()[0])
+            item, _ = mean_diversity.pop()
+            groups[i].add_item_if_viable(item, self.instance.adj_matrix[item])
         
         for item, _ in mean_diversity:
-            evaluated_gains = []
+            evaluated_gains = PriorityQueue()
+            added = False
             for i, group in enumerate(groups):
-                evaluated_gains.append(i, group.evaluate_item)
+                evaluated_gains.put( ( ((-1) ** bestFirst) * group.evaluate_item(item, self.instance.adj_matrix[item]), i ) )
+            
+            while not added:
+                _, group_index = evaluated_gains.get()
+                added = groups[group_index].add_item_if_viable(item, self.instance.adj_matrix[item])
+        
+        for idx, group in enumerate(groups):
+            if not group.is_valid():
+                missing = groups[idx].min_items - groups[idx].num_items
+                helper_idx = idx - 1
+                while missing:
+                    helper_item = groups[helper_idx].worst_item
+                    if groups[helper_idx].remove_item_if_viable(helper_item, self.instance.adj_matrix[helper_item]):
+                        groups[idx].add_item_if_viable(helper_item, self.instance.adj_matrix[helper_item])
+                        missing -= 1
+                    else:
+                        helper_idx -= 1
+        
+        self.current_solution = Solution(self.instance.number_groups, self.instance.group_bounds, groups)
+
+        
 
 
 

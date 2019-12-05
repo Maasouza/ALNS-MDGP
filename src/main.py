@@ -12,4 +12,6 @@ if __name__ == "__main__":
     print(alns.current_solution)
     alns.greedy_solution_2()
     print(alns.current_solution)
+    alns.greedy_solution_3(True)
+    print(alns.current_solution)
 

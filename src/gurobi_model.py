@@ -6,7 +6,7 @@ import os
 
 instancia = ""
 
-def resolve(instance):
+def resolve(instance, file):
     
     try:
 
@@ -67,8 +67,7 @@ def resolve(instance):
                  
 
         # print("Optimizing...")
-        model.write("mdgp_bnb.lp")
-        model.setParam("OutputFlag", 0)
+        # model.setParam("OutputFlag",  0)
         model.setParam("TuneOutput", 0)
 
         # rodar para pegar o valor da relaxacao da raiz
@@ -76,8 +75,10 @@ def resolve(instance):
         model.optimize()
 
         # model.optimize()
-        
-        print("\nSolucao otima - :" + str(model.objVal)+"\n")
+        arq = open("../output.dat",'a')
+        arq.write(file+"\nsolucao otima - :" + str(model.objVal)+"\n")
+        arq.close()
+        print(file+"\nsolucao otima - :" + str(model.objVal)+"\n")
         # for i in X:
         #     for var in i:
         #         print(var.varName, var.x)
@@ -87,6 +88,8 @@ def resolve(instance):
 
 
 ##Main
+## python3 gurobi_model.py >&1 | tee output.dat
+
 if __name__ == '__main__':
     # if(len(sys.argv) != 2):
     #     print("Insira uma instancia!\nExemplo: python bnb.py instancia.dat")
@@ -98,11 +101,11 @@ if __name__ == '__main__':
     files = []
     for r, d, f in os.walk(path):
         for file in f:
-            if file != 'output.dat' and any(i in file for i in ['120', '240']):#, '480', '960']):
+            if any(i in file for i in ['10','12','30','60','120']):#, '240', '480', '960']):
                 files.append(os.path.join(r, file))
 
     files.sort()
     for file in files:
         instance = Instance(file)
         print(file.split('/')[-1])
-        resolve(instance)    
+        resolve(instance, file)    
