@@ -3,7 +3,7 @@ from solution import *
 from queue import PriorityQueue
 import random
 
-class ALNS:
+class Simulation:
 
     def __init__(self, instance):
         self.instance = instance
@@ -113,7 +113,7 @@ class ALNS:
         mean_diversity.sort(key=lambda x:x[1], reverse = bestFirst)
 
         for i in range(self.instance.number_groups):
-            #adiciona os utimos em cada grupo
+            # adiciona os utimos em cada grupo
             item, _ = mean_diversity.pop()
             groups[i].add_item_if_viable(item, self.instance.adj_matrix[item])
         
@@ -140,11 +140,3 @@ class ALNS:
                         helper_idx -= 1
         
         self.current_solution = Solution(self.instance.number_groups, self.instance.group_bounds, groups)
-
-        
-
-
-
-
-
-       
