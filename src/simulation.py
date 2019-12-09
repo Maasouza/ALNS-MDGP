@@ -4,7 +4,7 @@ from queue import PriorityQueue
 import random
 
 class Simulation:
-
+    
     def __init__(self, instance):
         self.instance = instance
         self.items = set(range(instance.number_items))
@@ -121,7 +121,7 @@ class Simulation:
             evaluated_gains = PriorityQueue()
             added = False
             for i, group in enumerate(groups):
-                evaluated_gains.put( ( ((-1) ** bestFirst) * group.evaluate_item(item, self.instance.adj_matrix[item]), i ) )
+                evaluated_gains.put( ( ((-1) * group.evaluate_item(item, self.instance.adj_matrix[item]), i ) )
             
             while not added:
                 _, group_index = evaluated_gains.get()
