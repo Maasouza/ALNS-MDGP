@@ -1,5 +1,6 @@
 from instance import *
 from solution import *
+from utils import *
 from queue import PriorityQueue
 import random
 
@@ -9,7 +10,7 @@ class Simulation:
         self.instance = instance
         self.items = set(range(instance.number_items))
         self.current_solution = None
-
+        self.best_solution = None
 
     def generate_random_solution(self):
         groups = []
@@ -24,6 +25,8 @@ class Simulation:
                 included = groups[idx].add_item_if_viable(i, self.instance.adj_matrix[i])
 
         self.current_solution = Solution(self.instance.number_groups, self.instance.group_bounds, groups)
+        self.best_solution = self.current_solution.copy()
+
 
     def greedy_solution_1(self):
         groups = []
@@ -64,6 +67,8 @@ class Simulation:
                         helper_idx -= 1
         
         self.current_solution = Solution(self.instance.number_groups, self.instance.group_bounds, groups)
+        self.best_solution = self.current_solution.copy()
+
 
     def greedy_solution_2(self):
 
@@ -96,8 +101,8 @@ class Simulation:
                         helper_idx -= 1
         
         self.current_solution = Solution(self.instance.number_groups, self.instance.group_bounds, groups)
+        self.best_solution = self.current_solution.copy()
 
-        
 
     def greedy_solution_3(self, bestFirst):
         
@@ -121,7 +126,7 @@ class Simulation:
             evaluated_gains = PriorityQueue()
             added = False
             for i, group in enumerate(groups):
-                evaluated_gains.put( ( ((-1) * group.evaluate_item(item, self.instance.adj_matrix[item]), i ) )
+                evaluated_gains.put( ( ((-1) * group.evaluate_item(item, self.instance.adj_matrix[item]), i ) ))
             
             while not added:
                 _, group_index = evaluated_gains.get()
@@ -140,3 +145,63 @@ class Simulation:
                         helper_idx -= 1
         
         self.current_solution = Solution(self.instance.number_groups, self.instance.group_bounds, groups)
+        self.best_solution = self.current_solution.copy()
+
+
+    def __update_weights(operators, weights, r=0.8):
+        for idx, operator in enumerate(operators):
+            try:
+                weights[idx] = weights[idx] * (1-r) + r * (operator.score/operator.times_used)
+            except ZeroDivisionError:
+                pass
+            operator.reset_score()
+            operator.reset_times_used()
+
+
+    def alns(self, max_itts, initial_temperature, final_temperature, insertion_operators, removal_operators):
+        current_temperature = initial_temperature
+
+        removal_weights = [ 1.0 ] * len(removal_operators) 
+        insertion_weights = [ 1.0 ] * len(insertion_operators) 
+        
+        while current_temperature >= final_temperature:
+            itt = 0
+
+            while itt < max_itts:
+                new_solution = self.current_solution.copy()
+                
+                removal_operator = roulette(removal_operators, removal_weights)
+                removed_items = removal_operator.execute(new_solution, self.instance.adj_matrix)
+
+                insertion_operator = roulette(insertion_operators, insertion_weights)
+                insertion_operator.execute(new_solution, self.instance.adj_matrix, removed_items)
+
+                if new_solution > self.current_solution:
+                    self.current_solution = new_solution.copy()
+
+                    if self.current_solution > self.best_solution:
+                        self.best_solution = self.current_solution.copy()
+                        # sigma_1 points
+                        sigma_1 = 1.0
+                        removal_operator.increment(sigma_1)
+                        insertion_operator.increment(sigma_1)
+                    else:
+                        # sigma_2 points
+                        sigma_2 = 0.5
+                        removal_operator.increment(sigma_2)
+                        insertion_operator.increment(sigma_2)
+                else:
+                    delta_solution = new_solution.obj_value - self.current_solution.obj_value
+                    # accepted by simulated annealing criteria
+                    if random.random() < boltzman(delta_solution, current_temperature):
+                        self.current_solution = new_solution.copy()
+                        # sigma_3 points
+                        sigma_3 = 0.2
+                        removal_operator.increment(sigma_3)
+                        insertion_operator.increment(sigma_3)
+                itt += 1
+            
+            current_temperature *= 0.9 # cooling
+            
+            self.__update_weights(insertion_operators, insertion_weights)
+            self.__update_weights(removal_operators, removal_weights)

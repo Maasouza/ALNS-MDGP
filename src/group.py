@@ -15,8 +15,7 @@ class Group:
         
         new_group = Group(min_items, max_items)
 
-        for item, item_contribution in self.items.items():
-            new_group.items[item] = item_contribution
+        new_group.items = self.items.copy()
         
         new_group.num_items = self.num_items
         new_group.obj_value = self.obj_value

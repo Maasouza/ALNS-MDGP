@@ -2,7 +2,7 @@ from group import *
 
 class Solution:
 
-    def __init__(self, num_groups, groups_bounds, groups = [], obj_value = 0):
+    def __init__(self, num_groups, groups_bounds = None, groups = [], obj_value = 0):
         self.num_groups = num_groups
         self.groups = groups
         self.obj_value = obj_value
@@ -15,14 +15,13 @@ class Solution:
 
     def copy(self):
         num_groups = self.num_groups
-        groups_bounds =  self.groups_bounds[:]
         groups = []
         obj_value = self.obj_value
 
         for group in self.groups:
             groups.append(group.copy()) 
 
-        return Solution(num_groups, groups_bounds, groups) 
+        return Solution(num_groups, groups=groups) 
 
     def update_obj_value(self):
         self.obj_value = 0
@@ -44,3 +43,9 @@ class Solution:
         #     print("\tContribuição individual")
         #     print("\t",group.items)
         return ""
+    
+    def __eq__(self, other):
+        return self.obj_value == other.obj_value
+    
+    def gt(self, other):
+        return self.obj_value > other.obj_value

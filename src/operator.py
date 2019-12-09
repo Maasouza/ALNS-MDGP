@@ -8,6 +8,9 @@ class Operator:
 
     def reset_score(self):
         self.score = 0
+    
+    def reset_times_used(self):
+        self.times_used = 0
 
 
 class InsertionOperator(Operator):
@@ -15,17 +18,17 @@ class InsertionOperator(Operator):
         super()
         self.function = function
 
-    def execute(self, partial_solution, remaining_items):
+    def execute(self, partial_solution, diversities_matrix, remaining_items):
         # TODO: test if will change by ref
         self.times_used += 1
-        self.function(partial_solution, remaining_items)
+        self.function(partial_solution, diversities_matrix, remaining_items)
 
 class RemovalOperator(Operator):
     def __init__(self, function):
         super()
         self.function = function
 
-    def execute(self, partial_solution):
+    def execute(self, partial_solution, diversities_matrix):
         # TODO: test if will change by ref
         self.times_used += 1
-        return self.function(partial_solution) #removed items
+        return self.function(partial_solution, diversities_matrix) #removed items
