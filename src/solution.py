@@ -12,6 +12,18 @@ class Solution:
         else:
             self.update_obj_value()
 
+
+    def copy(self):
+        num_groups = self.num_groups
+        groups_bounds =  self.groups_bounds[:]
+        groups = []
+        obj_value = self.obj_value
+
+        for group in self.groups:
+            groups.append(group.copy()) 
+
+        return Solution(num_groups, groups_bounds, groups) 
+
     def update_obj_value(self):
         self.obj_value = 0
         for group in self.groups:

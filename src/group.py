@@ -9,6 +9,22 @@ class Group:
         self.best_item = None
         self.worst_item = None
 
+    def copy(self):
+        min_items = self.min_items
+        max_items = self.max_items
+        
+        new_group = Group(min_items, max_items)
+
+        for item, item_contribution in self.items.items():
+            new_group.items[item] = item_contribution
+        
+        new_group.num_items = self.num_items
+        new_group.obj_value = self.obj_value
+        
+        new_group.best_item = self.best_item
+        new_group.worst_item = self.worst_item
+        
+        return new_group
 
     def add_item_if_viable(self, item, item_diversity):
         if self.num_items + 1 <= self.max_items:
