@@ -170,12 +170,11 @@ class Simulation:
             self.best_solution = self.current_solution.copy()
 
 
-    def __update_weights(self, operators, weights, r=0.8):
+    def __update_weights(self, operators, weights, r=0.2):
         for idx, operator in enumerate(operators):
-            try:
-                weights[idx] = weights[idx] * (1-r) + r * (operator.score/operator.times_used)
-            except ZeroDivisionError:
-                pass
+            if operator.score != 0 and operator.times_used != 0:
+                # weights[idx] = weights[idx] * (1-r) + r * (operator.score/operator.times_used)
+                weights[idx] = weights[idx] + r * (operator.score/operator.times_used)
             operator.reset_score()
             operator.reset_times_used()
 
@@ -236,3 +235,10 @@ class Simulation:
                 
             self.__update_weights(insertion_operators, insertion_weights)
             self.__update_weights(removal_operators, removal_weights)
+
+        
+        print('Final Weights:')
+        for idx, op in enumerate(removal_operators):
+            print(op.name, removal_weights[idx])
+        for idx, op in enumerate(insertion_operators):
+            print(op.name, insertion_operators[idx])
