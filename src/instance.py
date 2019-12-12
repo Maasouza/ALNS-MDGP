@@ -5,6 +5,7 @@ class Instance:
         self.number_items = 0 #Inicializa o número de items
         self.number_groups = 0 #Inicializa o número de grupos
         self.adj_matrix = [] #Matriz de diversidade
+        self.similarity_matrix = [] #Matriz de similaridade entre os itens
         self.group_bounds = [] #Tamanho dos grupos
         self.group_size_type = None #Tipo de tamanhos de grupos
         self.__read_instance(path)
@@ -42,3 +43,14 @@ class Instance:
 
             except Exception as e: #Deu erro!! Imprima o erro/exceção
                 print(repr(e))
+        
+        # Calcula a similaridade entre cada par (i, j) de itens
+        for i in range(self.number_items):
+            for j in range(i+1, self.number_items):
+                similarity = 0
+                for k in range(self.number_items):
+                    if k!=i and k!=j:
+                        similarity += (self.adj_matrix[i][k] - self.adj_matrix[j][k])**2
+                self.similarity_matrix[i][j] = similarity**(0.5)
+                self.similarity_matrix[j][i] = similarity**(0.5)
+                         
