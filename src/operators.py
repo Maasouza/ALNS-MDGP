@@ -15,20 +15,18 @@ class Operator:
 
 class InsertionOperator(Operator):
     def __init__(self, function):
-        super()
+        Operator.__init__(self)
         self.function = function
 
     def execute(self, partial_solution, diversities_matrix, remaining_items):
-        # TODO: test if will change by ref
         self.times_used += 1
         self.function(partial_solution, diversities_matrix, remaining_items)
 
 class RemovalOperator(Operator):
     def __init__(self, function):
-        super()
+        Operator.__init__(self)
         self.function = function
 
-    def execute(self, partial_solution, diversities_matrix):
-        # TODO: test if will change by ref
+    def execute(self, partial_solution, diversities_matrix, removal_rate):
         self.times_used += 1
-        return self.function(partial_solution, diversities_matrix) #removed items
+        return self.function(partial_solution, diversities_matrix, removal_rate) #removed items

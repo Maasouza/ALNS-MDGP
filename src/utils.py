@@ -1,4 +1,5 @@
 from math import exp
+from solution import *
 import random
 
 def boltzman(delta, temperature):

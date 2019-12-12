@@ -31,6 +31,12 @@ class Group:
         else:
             return False
 
+    def add_item_if_needed(self, item, item_diversity):
+        if self.num_items < self.min_items:
+            return self.add_item(item, item_diversity)
+        else:
+            return False
+
     def add_item(self, item, item_diversity):
         max_contribution = -float('inf')
         min_contribution = float('inf')
@@ -99,4 +105,4 @@ class Group:
                 self.best_item = item
 
     def __repr__(self):
-        return "("+str(self.min_items)+","+str(self.max_items)+")  -  ("+str(self.num_items)+")"
+        return "Bounds = ("+str(self.min_items)+","+str(self.max_items)+")\nNumber items =("+str(self.num_items)+")"

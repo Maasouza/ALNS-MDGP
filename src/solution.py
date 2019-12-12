@@ -36,16 +36,17 @@ class Solution:
 
     def __repr__(self):
         print("Diversidade ", self.obj_value)
-        # print("Groupos:")
-        # for idx, group in enumerate(self.groups):
-        #     print("\tGrupo "+str(idx))
-        #     print("\tDiversidade "+str(group.obj_value))
-        #     print("\tContribuição individual")
-        #     print("\t",group.items)
+        print("Viavél ", self.is_valid_solution())
+        print("Groupos:")
+        for idx, group in enumerate(self.groups):
+            print("\tGrupo "+str(idx))
+            print("\tDiversidade "+str(group.obj_value))
+            print("\tContribuição individual")
+            print("\t",group.items)
         return ""
     
     def __eq__(self, other):
         return self.obj_value == other.obj_value
     
-    def gt(self, other):
+    def __gt__(self, other):
         return self.obj_value > other.obj_value

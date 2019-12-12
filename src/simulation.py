@@ -11,6 +11,7 @@ class Simulation:
         self.items = set(range(instance.number_items))
         self.current_solution = None
         self.best_solution = None
+        self.path_relink_solutions = []
 
     def generate_random_solution(self):
         groups = []
@@ -18,11 +19,11 @@ class Simulation:
             lower_bound, upper_bound = self.instance.group_bounds[i]
             groups.append(Group(lower_bound, upper_bound))
         
-        for i in self.items:
+        for item in self.items:
             included = False
             while not included:
                 idx = random.choices(range(self.instance.number_groups))[0]
-                included = groups[idx].add_item_if_viable(i, self.instance.adj_matrix[i])
+                included = groups[idx].add_item_if_viable(item, self.instance.adj_matrix[item])
 
         self.current_solution = Solution(self.instance.number_groups, self.instance.group_bounds, groups)
         self.best_solution = self.current_solution.copy()
@@ -148,7 +149,7 @@ class Simulation:
         self.best_solution = self.current_solution.copy()
 
 
-    def __update_weights(operators, weights, r=0.8):
+    def __update_weights(self, operators, weights, r=0.8):
         for idx, operator in enumerate(operators):
             try:
                 weights[idx] = weights[idx] * (1-r) + r * (operator.score/operator.times_used)
@@ -158,7 +159,7 @@ class Simulation:
             operator.reset_times_used()
 
 
-    def alns(self, max_itts, initial_temperature, final_temperature, insertion_operators, removal_operators):
+    def alns(self, max_itts, initial_temperature, final_temperature, insertion_operators, removal_operators, removal_rate=0.3):
         current_temperature = initial_temperature
 
         removal_weights = [ 1.0 ] * len(removal_operators) 
@@ -171,14 +172,17 @@ class Simulation:
                 new_solution = self.current_solution.copy()
                 
                 removal_operator = roulette(removal_operators, removal_weights)
-                removed_items = removal_operator.execute(new_solution, self.instance.adj_matrix)
+                removed_items = removal_operator.execute(new_solution, self.instance.adj_matrix, removal_rate)
+                new_solution.update_obj_value()
 
                 insertion_operator = roulette(insertion_operators, insertion_weights)
                 insertion_operator.execute(new_solution, self.instance.adj_matrix, removed_items)
+                new_solution.update_obj_value()
+                
 
+                #TODO adicionar soluções ao path relink soluções
                 if new_solution > self.current_solution:
                     self.current_solution = new_solution.copy()
-
                     if self.current_solution > self.best_solution:
                         self.best_solution = self.current_solution.copy()
                         # sigma_1 points
