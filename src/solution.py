@@ -16,7 +16,6 @@ class Solution:
     def copy(self):
         num_groups = self.num_groups
         groups = []
-        obj_value = self.obj_value
 
         for group in self.groups:
             groups.append(group.copy()) 
@@ -37,12 +36,12 @@ class Solution:
     def __repr__(self):
         print("Diversidade ", self.obj_value)
         print("Viavél ", self.is_valid_solution())
-        print("Groupos:")
-        for idx, group in enumerate(self.groups):
-            print("\tGrupo "+str(idx))
-            print("\tDiversidade "+str(group.obj_value))
-            print("\tContribuição individual")
-            print("\t",group.items)
+        # print("Groupos:")
+        # for idx, group in enumerate(self.groups):
+        #     print("\tGrupo "+str(idx))
+        #     print("\tDiversidade "+str(group.obj_value))
+        #     print("\tContribuição individual")
+        #     print("\t",group.items)
         return ""
     
     def __eq__(self, other):

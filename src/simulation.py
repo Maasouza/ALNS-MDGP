@@ -25,8 +25,22 @@ class Simulation:
                 idx = random.choices(range(self.instance.number_groups))[0]
                 included = groups[idx].add_item_if_viable(item, self.instance.adj_matrix[item])
 
+        groups.sort(key = lambda x: x.min_items - x.num_items)
+        for idx, group in enumerate(groups):
+            if not group.is_valid():
+                missing = groups[idx].min_items - groups[idx].num_items
+                helper_idx = idx - 1
+                while missing:
+                    helper_item = groups[helper_idx].worst_item
+                    if groups[helper_idx].remove_item_if_viable(helper_item, self.instance.adj_matrix[helper_item]):
+                        groups[idx].add_item_if_viable(helper_item, self.instance.adj_matrix[helper_item])
+                        missing -= 1
+                    else:
+                        helper_idx -= 1
+
         self.current_solution = Solution(self.instance.number_groups, self.instance.group_bounds, groups)
-        self.best_solution = self.current_solution.copy()
+        if self.best_solution is None or self.current_solution > self.best_solution:
+            self.best_solution = self.current_solution.copy()
 
 
     def greedy_solution_1(self):
@@ -55,6 +69,8 @@ class Simulation:
                     used_items.add(j)
                 else:
                     select_group+=1
+        
+        groups.sort(key = lambda x: x.min_items - x.num_items)
         for idx, group in enumerate(groups):
             if not group.is_valid():
                 missing = groups[idx].min_items - groups[idx].num_items
@@ -68,7 +84,8 @@ class Simulation:
                         helper_idx -= 1
         
         self.current_solution = Solution(self.instance.number_groups, self.instance.group_bounds, groups)
-        self.best_solution = self.current_solution.copy()
+        if self.best_solution is None or self.current_solution > self.best_solution:
+            self.best_solution = self.current_solution.copy()
 
 
     def greedy_solution_2(self):
@@ -89,6 +106,7 @@ class Simulation:
             while not groups[select_group].add_item_if_viable(i, self.instance.adj_matrix[i]):
                select_group+=1
             
+        groups.sort(key = lambda x: x.min_items - x.num_items)
         for idx, group in enumerate(groups):
             if not group.is_valid():
                 missing = groups[idx].min_items - groups[idx].num_items
@@ -102,7 +120,8 @@ class Simulation:
                         helper_idx -= 1
         
         self.current_solution = Solution(self.instance.number_groups, self.instance.group_bounds, groups)
-        self.best_solution = self.current_solution.copy()
+        if self.best_solution is None or self.current_solution > self.best_solution:
+            self.best_solution = self.current_solution.copy()
 
 
     def greedy_solution_3(self, bestFirst):
@@ -133,6 +152,7 @@ class Simulation:
                 _, group_index = evaluated_gains.get()
                 added = groups[group_index].add_item_if_viable(item, self.instance.adj_matrix[item])
         
+        groups.sort(key = lambda x: x.min_items - x.num_items)
         for idx, group in enumerate(groups):
             if not group.is_valid():
                 missing = groups[idx].min_items - groups[idx].num_items
@@ -146,7 +166,8 @@ class Simulation:
                         helper_idx -= 1
         
         self.current_solution = Solution(self.instance.number_groups, self.instance.group_bounds, groups)
-        self.best_solution = self.current_solution.copy()
+        if self.best_solution is None or self.current_solution > self.best_solution:
+            self.best_solution = self.current_solution.copy()
 
 
     def __update_weights(self, operators, weights, r=0.8):
@@ -172,11 +193,11 @@ class Simulation:
                 new_solution = self.current_solution.copy()
                 
                 removal_operator = roulette(removal_operators, removal_weights)
-                removed_items = removal_operator.execute(new_solution, self.instance.adj_matrix, removal_rate)
+                removed_items = removal_operator.execute(new_solution, self.instance, removal_rate)
                 new_solution.update_obj_value()
 
                 insertion_operator = roulette(insertion_operators, insertion_weights)
-                insertion_operator.execute(new_solution, self.instance.adj_matrix, removed_items)
+                insertion_operator.execute(new_solution, self.instance, removed_items)
                 new_solution.update_obj_value()
                 
 
@@ -207,5 +228,11 @@ class Simulation:
             
             current_temperature *= 0.9 # cooling
             
+            for op in removal_operators:
+                print(op)
+            for op in insertion_operators:
+                print(op)
+            print('\n')
+                
             self.__update_weights(insertion_operators, insertion_weights)
             self.__update_weights(removal_operators, removal_weights)

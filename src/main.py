@@ -16,7 +16,7 @@ if __name__ == "__main__":
                 files.append(os.path.join(r, file))
 
     files.sort()
-    files = [files[0]]
+    files = [files[1]]
 
     # print("instance_name, random, greedy_1, greedy_2, greedy_3_true, greedy_3_false")
     for file in files:
@@ -26,14 +26,28 @@ if __name__ == "__main__":
 
         simulation = Simulation(instance)
         simulation.generate_random_solution()
+        print('# best until random:', simulation.best_solution)
+        simulation.greedy_solution_1()
+        print('# best until greedy_1:', simulation.best_solution)
+        simulation.greedy_solution_2()
+        print('# best until greedy_2:', simulation.best_solution)
+        simulation.greedy_solution_3(bestFirst=True)
+        print('# best until greedy_3-true:', simulation.best_solution)
+        simulation.greedy_solution_3(bestFirst=False)
+        print('# best until greedy_3-false:', simulation.best_solution)
 
-        insertion_operators = [InsertionOperator(insertion_1)]
-        removal_operators = [RemovalOperator(removal_1)]
+        # simulation.current_solution = simulation.best_solution.copy()
+
+        removal_functions = [[removal_1, 'Random'], [removal_2, "Biased Random"], [removal_3,"Greedy Least Contributor"], [removal_4,"Pair Shaw"], [removal_5,"Shaw"]]
+        insertion_functions = [[insertion_1, 'Random']]
+
+        insertion_operators =  [InsertionOperator(*i) for i in insertion_functions]
+        removal_operators = [RemovalOperator(*r) for r in removal_functions]
 
         simulation.alns(
             max_itts=100, 
-            initial_temperature=10**4, 
-            final_temperature=10**(-5), 
+            initial_temperature=10**5, 
+            final_temperature=10**(-4), 
             insertion_operators=insertion_operators, 
             removal_operators=removal_operators
         )

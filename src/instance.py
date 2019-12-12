@@ -34,7 +34,7 @@ class Instance:
                 if self.number_groups != len(self.group_bounds): #Aponta incoerência no número de grupos
                     raise Exception("Number of groups and number of bounds don't match", self.number_groups, len(self.group_bounds))                
 
-                self.adj_matrix = [[0]*self.number_items for i in range(self.number_items)] #Inicializa a matriz em zeros?? Diagonal principal??
+                self.adj_matrix = [[0]*self.number_items for i in range(self.number_items)] #Inicializa a matriz em zeros
 
                 for line in f: #Ler as linhas das instância - i,j e dij
                     i, j, k = line.split()
@@ -45,6 +45,7 @@ class Instance:
                 print(repr(e))
         
         # Calcula a similaridade entre cada par (i, j) de itens
+        self.similarity_matrix = [[0]*self.number_items for i in range(self.number_items)] #Inicializa a matriz em zeros
         for i in range(self.number_items-1):
             for j in range(i+1, self.number_items):
                 similarity = 0
