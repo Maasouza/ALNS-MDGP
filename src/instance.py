@@ -45,7 +45,7 @@ class Instance:
                 print(repr(e))
         
         # Calcula a similaridade entre cada par (i, j) de itens
-        for i in range(self.number_items):
+        for i in range(self.number_items-1):
             for j in range(i+1, self.number_items):
                 similarity = 0
                 for k in range(self.number_items):

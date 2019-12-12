@@ -3,7 +3,7 @@ class Group:
     def __init__(self, min_items, max_items):
         self.min_items = min_items
         self.max_items = max_items
-        self.items = dict()
+        self.items = dict() # {items: contribution}
         self.num_items = len(self.items)
         self.obj_value = 0
         self.best_item = None
