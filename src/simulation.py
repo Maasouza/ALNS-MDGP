@@ -3,6 +3,7 @@ from solution import *
 from utils import *
 from queue import PriorityQueue
 import random
+from functions4operation import repair
 
 class Simulation:
     
@@ -25,20 +26,10 @@ class Simulation:
                 idx = random.choices(range(self.instance.number_groups))[0]
                 included = groups[idx].add_item_if_viable(item, self.instance.adj_matrix[item])
 
-        groups.sort(key = lambda x: x.min_items - x.num_items)
-        for idx, group in enumerate(groups):
-            if not group.is_valid():
-                missing = groups[idx].min_items - groups[idx].num_items
-                helper_idx = idx - 1
-                while missing:
-                    helper_item = groups[helper_idx].worst_item
-                    if groups[helper_idx].remove_item_if_viable(helper_item, self.instance.adj_matrix[helper_item]):
-                        groups[idx].add_item_if_viable(helper_item, self.instance.adj_matrix[helper_item])
-                        missing -= 1
-                    else:
-                        helper_idx -= 1
-
         self.current_solution = Solution(self.instance.number_groups, self.instance.group_bounds, groups)
+        
+        repair(self.current_solution, self.instance)
+
         if self.best_solution is None or self.current_solution > self.best_solution:
             self.best_solution = self.current_solution.copy()
 
@@ -70,20 +61,10 @@ class Simulation:
                 else:
                     select_group+=1
         
-        groups.sort(key = lambda x: x.min_items - x.num_items)
-        for idx, group in enumerate(groups):
-            if not group.is_valid():
-                missing = groups[idx].min_items - groups[idx].num_items
-                helper_idx = idx - 1
-                while missing:
-                    helper_item = groups[helper_idx].worst_item
-                    if groups[helper_idx].remove_item_if_viable(helper_item, self.instance.adj_matrix[helper_item]):
-                        groups[idx].add_item_if_viable(helper_item, self.instance.adj_matrix[helper_item])
-                        missing -= 1
-                    else:
-                        helper_idx -= 1
-        
         self.current_solution = Solution(self.instance.number_groups, self.instance.group_bounds, groups)
+       
+        repair(self.current_solution, self.instance)
+
         if self.best_solution is None or self.current_solution > self.best_solution:
             self.best_solution = self.current_solution.copy()
 
@@ -106,20 +87,10 @@ class Simulation:
             while not groups[select_group].add_item_if_viable(i, self.instance.adj_matrix[i]):
                select_group+=1
             
-        groups.sort(key = lambda x: x.min_items - x.num_items)
-        for idx, group in enumerate(groups):
-            if not group.is_valid():
-                missing = groups[idx].min_items - groups[idx].num_items
-                helper_idx = idx - 1
-                while missing:
-                    helper_item = groups[helper_idx].worst_item
-                    if groups[helper_idx].remove_item_if_viable(helper_item, self.instance.adj_matrix[helper_item]):
-                        groups[idx].add_item_if_viable(helper_item, self.instance.adj_matrix[helper_item])
-                        missing -= 1
-                    else:
-                        helper_idx -= 1
-        
         self.current_solution = Solution(self.instance.number_groups, self.instance.group_bounds, groups)
+      
+        repair(self.current_solution, self.instance)
+      
         if self.best_solution is None or self.current_solution > self.best_solution:
             self.best_solution = self.current_solution.copy()
 
@@ -152,20 +123,10 @@ class Simulation:
                 _, group_index = evaluated_gains.get()
                 added = groups[group_index].add_item_if_viable(item, self.instance.adj_matrix[item])
         
-        groups.sort(key = lambda x: x.min_items - x.num_items)
-        for idx, group in enumerate(groups):
-            if not group.is_valid():
-                missing = groups[idx].min_items - groups[idx].num_items
-                helper_idx = idx - 1
-                while missing:
-                    helper_item = groups[helper_idx].worst_item
-                    if groups[helper_idx].remove_item_if_viable(helper_item, self.instance.adj_matrix[helper_item]):
-                        groups[idx].add_item_if_viable(helper_item, self.instance.adj_matrix[helper_item])
-                        missing -= 1
-                    else:
-                        helper_idx -= 1
-        
         self.current_solution = Solution(self.instance.number_groups, self.instance.group_bounds, groups)
+        
+        repair(self.current_solution, self.instance)
+        
         if self.best_solution is None or self.current_solution > self.best_solution:
             self.best_solution = self.current_solution.copy()
 
@@ -205,6 +166,7 @@ class Simulation:
                     self.current_solution = new_solution.copy()
                     if self.current_solution > self.best_solution:
                         self.best_solution = self.current_solution.copy()
+                        print("### BEst", self.best_solution)
                         # sigma_1 points
                         sigma_1 = 1.0
                         removal_operator.increment(sigma_1)
@@ -227,18 +189,18 @@ class Simulation:
             
             current_temperature *= 0.9 # cooling
             
-            for op in removal_operators:
-                print(op)
-            for op in insertion_operators:
-                print(op)
-            print('\n')
+            # for op in removal_operators:
+            #     print(op)
+            # for op in insertion_operators:
+            #     print(op)
+            # print('\n')
                 
             self.__update_weights(insertion_operators, insertion_weights)
             self.__update_weights(removal_operators, removal_weights)
 
-        
-        print('Final Weights:')
+        print('Final Weights:\nRemoval:')
         for idx, op in enumerate(removal_operators):
             print(op.name, removal_weights[idx])
+        print('Insertion')
         for idx, op in enumerate(insertion_operators):
-            print(op.name, insertion_operators[idx])
+            print(op.name, insertion_weights[idx])
