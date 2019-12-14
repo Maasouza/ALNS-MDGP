@@ -13,7 +13,7 @@ if __name__ == "__main__":
     files = []
     for r, d, f in os.walk(path):
         for file in f:
-            if any(i in file for i in ['10_ds_01', '10_ss_01', '12_ds_01', '12_ss_01', '30_ds_01', '30_ss_01', '60_ds_01', '60_ss_01', '120_ds_01', '120_ss_01', '240_ds_01', '240_ss_01', '480_ds_01', '480_ss_01', '960_ds_01', '960_ss_01' ]):
+            if any(i in file for i in [ '120_ds_01', '120_ss_01', '240_ds_01', '240_ss_01', '480_ds_01', '480_ss_01', '960_ds_01', '960_ss_01' ]):
                 files.append(os.path.join(r, file))
 
     files.sort()
@@ -46,17 +46,19 @@ if __name__ == "__main__":
             removal_operators = [RemovalOperator(*r) for r in removal_functions]
             
             start_time = time.time()
-
+            reheat = True
             best_solutions, removal_operator, insertion_operator, itt_global= simulation.alns(
                 max_itts=100, 
                 initial_temperature=10**4, 
                 final_temperature=10**(-3), 
                 insertion_operators=insertion_operators, 
-                removal_operators=removal_operators
+                removal_operators=removal_operators,
+                removal_rate = [0.2, 0.4],
+                reheat = reheat
             )
             end_time = time.time()
 
-            write_to_file(instance_name, best_solutions, removal_operator, insertion_operator, end_time - start_time, itt_global, instance_name+"_"+str(i)+".out")
+            write_to_file(instance_name, reheat, best_solutions, removal_operator, insertion_operator, end_time - start_time, itt_global, instance_name+"_"+str(i)+".out")
 
         print("### BEST", simulation.best_solution)
 

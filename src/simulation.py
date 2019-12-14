@@ -140,23 +140,32 @@ class Simulation:
             operator.reset_times_used()
 
 
-    def alns(self, max_itts, initial_temperature, final_temperature, insertion_operators, removal_operators, removal_rate=0.3):
+    def alns(self, max_itts, initial_temperature, final_temperature, insertion_operators, removal_operators, removal_rate=[0.3, 0.5], reheat=False):
         current_temperature = initial_temperature
 
         removal_weights = [ 1.0 ] * len(removal_operators) 
         insertion_weights = [ 1.0 ] * len(insertion_operators) 
         
+        current_removal_rate = removal_rate[0]
+
         itt_global = 0
+        itt_without_enhancement = 0
+        max_itt_without_enhancement = 2*max_itts
+        
+        reheat_times = 0
+
         best_solutions = [] #[(obj_best_itt, itt)]
 
         while current_temperature >= final_temperature:
             itt_segment = 0
+            
 
             while itt_segment < max_itts:
+                
                 new_solution = self.current_solution.copy()
                 
                 removal_operator = roulette(removal_operators, removal_weights)
-                removed_items = removal_operator.execute(new_solution, self.instance, removal_rate)
+                removed_items = removal_operator.execute(new_solution, self.instance, current_removal_rate)
                 new_solution.update_obj_value()
 
                 insertion_operator = roulette(insertion_operators, insertion_weights)
@@ -164,10 +173,17 @@ class Simulation:
                 new_solution.update_obj_value()
                 
 
+                solution_change = False
                 #TODO adicionar soluções ao path relink soluções
                 if new_solution > self.current_solution:
+                    print("New Current")
                     self.current_solution = new_solution.copy()
+                    solution_change = True
                     if self.current_solution > self.best_solution:
+                        print("new Best")
+                        best_temperature = current_temperature
+                        current_removal_rate = removal_rate[0]
+                        reheat_times = 0
                         self.best_solution = self.current_solution.copy()
                         # print("### Best", self.best_solution)
                         best_solutions.append((self.best_solution.obj_value, itt_global))
@@ -175,11 +191,13 @@ class Simulation:
                         sigma_1 = 5.0
                         removal_operator.increment(sigma_1)
                         insertion_operator.increment(sigma_1)
+                    
                     else:
                         # sigma_2 points
                         sigma_2 = 1.0
                         removal_operator.increment(sigma_2)
                         insertion_operator.increment(sigma_2)
+
                 else:
                     if new_solution != self.current_solution:
                         delta_solution = new_solution.obj_value - self.current_solution.obj_value
@@ -190,6 +208,25 @@ class Simulation:
                             sigma_3 = 3.0
                             removal_operator.increment(sigma_3)
                             insertion_operator.increment(sigma_3)   
+
+            
+                if solution_change:
+                    itt_without_enhancement = 0
+                    # current_removal_rate = removal_rate[0]
+                else:
+                    itt_without_enhancement +=1 
+                    current_removal_rate = min( removal_rate[1], removal_rate[0] + (removal_rate[1] - removal_rate[0])*(itt_without_enhancement/max_itt_without_enhancement))
+
+                if reheat and itt_without_enhancement > max_itt_without_enhancement :
+                    itt_without_enhancement = 0
+                    reheat_times += 1
+                    current_temperature  = max(best_temperature/reheat_times, current_temperature)
+                    print("REHEATING", itt_global, current_temperature)
+                    if random.random() > 0.1:
+                        self.generate_random_solution()
+                    else:
+                        self.current_solution = self.best_solution.copy()
+                        
 
                 itt_segment += 1
                 itt_global += 1
