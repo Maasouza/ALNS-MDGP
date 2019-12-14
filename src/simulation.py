@@ -146,10 +146,13 @@ class Simulation:
         removal_weights = [ 1.0 ] * len(removal_operators) 
         insertion_weights = [ 1.0 ] * len(insertion_operators) 
         
-        while current_temperature >= final_temperature:
-            itt = 0
+        itt_global = 0
+        best_solutions = [] #[(obj_best_itt, itt)]
 
-            while itt < max_itts:
+        while current_temperature >= final_temperature:
+            itt_segment = 0
+
+            while itt_segment < max_itts:
                 new_solution = self.current_solution.copy()
                 
                 removal_operator = roulette(removal_operators, removal_weights)
@@ -166,26 +169,30 @@ class Simulation:
                     self.current_solution = new_solution.copy()
                     if self.current_solution > self.best_solution:
                         self.best_solution = self.current_solution.copy()
-                        print("### BEst", self.best_solution)
+                        # print("### Best", self.best_solution)
+                        best_solutions.append((self.best_solution.obj_value, itt_global))
                         # sigma_1 points
-                        sigma_1 = 1.0
+                        sigma_1 = 5.0
                         removal_operator.increment(sigma_1)
                         insertion_operator.increment(sigma_1)
                     else:
                         # sigma_2 points
-                        sigma_2 = 0.5
+                        sigma_2 = 1.0
                         removal_operator.increment(sigma_2)
                         insertion_operator.increment(sigma_2)
                 else:
-                    delta_solution = new_solution.obj_value - self.current_solution.obj_value
-                    # accepted by simulated annealing criteria
-                    if random.random() < boltzman(delta_solution, current_temperature):
-                        self.current_solution = new_solution.copy()
-                        # sigma_3 points
-                        sigma_3 = 0.2
-                        removal_operator.increment(sigma_3)
-                        insertion_operator.increment(sigma_3)
-                itt += 1
+                    if new_solution != self.current_solution:
+                        delta_solution = new_solution.obj_value - self.current_solution.obj_value
+                        # accepted by simulated annealing criteria
+                        if random.random() < boltzman(delta_solution, current_temperature):
+                            self.current_solution = new_solution.copy()
+                            # sigma_3 points
+                            sigma_3 = 3.0
+                            removal_operator.increment(sigma_3)
+                            insertion_operator.increment(sigma_3)   
+
+                itt_segment += 1
+                itt_global += 1
             
             current_temperature *= 0.9 # cooling
             
@@ -198,9 +205,12 @@ class Simulation:
             self.__update_weights(insertion_operators, insertion_weights)
             self.__update_weights(removal_operators, removal_weights)
 
-        print('Final Weights:\nRemoval:')
-        for idx, op in enumerate(removal_operators):
-            print(op.name, removal_weights[idx])
-        print('Insertion')
+        removal_operator_return = []
+        insertion_operator_return = []
+
+        for idx, op in enumerate(removal_operators):            
+            removal_operator_return.append((op.name, removal_weights[idx]))
         for idx, op in enumerate(insertion_operators):
-            print(op.name, insertion_weights[idx])
+            insertion_operator_return.append((op.name, insertion_weights[idx]))
+
+        return best_solutions, removal_operator_return, insertion_operator_return, itt_global

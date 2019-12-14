@@ -26,6 +26,8 @@ class Solution:
         self.obj_value = 0
         for group in self.groups:
             self.obj_value += group.obj_value
+
+        self.obj_value = round(self.obj_value, 3)
         
     def is_valid_solution(self):
         valid_groups = 1
@@ -49,3 +51,6 @@ class Solution:
     
     def __gt__(self, other):
         return self.obj_value > other.obj_value
+    
+    def __ge__(self, other):
+        return self.obj_value >= other.obj_value
