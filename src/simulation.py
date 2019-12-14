@@ -172,21 +172,18 @@ class Simulation:
                 insertion_operator.execute(new_solution, self.instance, removed_items)
                 new_solution.update_obj_value()
                 
-
                 solution_change = False
-                #TODO adicionar soluções ao path relink soluções
                 if new_solution > self.current_solution:
-                    print("New Current")
                     self.current_solution = new_solution.copy()
                     solution_change = True
                     if self.current_solution > self.best_solution:
-                        print("new Best")
                         best_temperature = current_temperature
                         current_removal_rate = removal_rate[0]
                         reheat_times = 0
                         self.best_solution = self.current_solution.copy()
                         # print("### Best", self.best_solution)
                         best_solutions.append((self.best_solution.obj_value, itt_global))
+                        self.path_relink_solutions.append(self.best_solution.copy())
                         # sigma_1 points
                         sigma_1 = 5.0
                         removal_operator.increment(sigma_1)
@@ -209,7 +206,6 @@ class Simulation:
                             removal_operator.increment(sigma_3)
                             insertion_operator.increment(sigma_3)   
 
-            
                 if solution_change:
                     itt_without_enhancement = 0
                     # current_removal_rate = removal_rate[0]
@@ -221,13 +217,11 @@ class Simulation:
                     itt_without_enhancement = 0
                     reheat_times += 1
                     current_temperature  = max(best_temperature/reheat_times, current_temperature)
-                    print("REHEATING", itt_global, current_temperature)
                     if random.random() > 0.1:
                         self.generate_random_solution()
                     else:
                         self.current_solution = self.best_solution.copy()
                         
-
                 itt_segment += 1
                 itt_global += 1
             
