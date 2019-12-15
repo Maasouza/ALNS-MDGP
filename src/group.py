@@ -65,11 +65,14 @@ class Group:
 
     def evaluate_item(self, item, item_diversity):
         
+        if len(self.items) == 0:
+            return 0
+        
         item_contribution = 0
 
         for i in self.items:
             item_contribution += item_diversity[i] 
-
+        
         return float(item_contribution)/float(len(self.items))
 
     def remove_item_if_viable(self, item, item_diversity):
