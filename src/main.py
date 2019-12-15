@@ -54,7 +54,7 @@ if __name__ == "__main__":
             )
             end_time = time.time()
             elapsed_time = end_time -start_time
-
+            print(elapsed_time)
             opts_info.append(best_solutions[-1])
             itts_global.append(itt_global)
             exec_times.append(elapsed_time)
@@ -64,7 +64,7 @@ if __name__ == "__main__":
             # path relink
             best_solution_path, enhanced = path_relinking(simulation.path_relink_solutions, instance)
             if enhanced:
-                with open("../output/pathrelink_"+instance_name+".out", 'w') as f:
+                with open("../output/pathrelink_"+instance_name+"_"+str(i)+".out", 'w') as f:
                     f.write("Pathrelinking solution enhanced: "+str(best_solution_path.obj_value))
 
         write_all_itterations(instance_name, opts_info, itts_global, exec_times)
