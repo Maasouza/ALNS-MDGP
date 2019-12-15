@@ -7,8 +7,8 @@ class Solution:
         self.groups = groups
         self.obj_value = obj_value
         if groups == []:
-            for min_items, max_items in groups_bounds :
-                self.groups.append(Group(min_items, max_items))
+            for idx, min_items, max_items in enumerate(groups_bounds) :
+                self.groups.append(Group(idx, min_items, max_items))
         else:
             self.update_obj_value()
 

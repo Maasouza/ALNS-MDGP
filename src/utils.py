@@ -15,38 +15,73 @@ def roulette(elements, weights):
         if cum_sum > unif:
             return elements[idx]
 
-def path_relinking(solutions, instance):
-    best_solution = max(solutions)
-
-    path_worst_solution, path_best_solution = sorted(list(np.random.choice(solutions, 2, replace=False)))
+def path_relinking(sols, instance):
     
-    list_path_worst_solution, worst_group_bounds, worst_group_num_items, worst_viable = solution_to_list(path_worst_solution, instance.number_items)
-    list_path_best_solution, best_group_bounds, best_group_num_items, best_viable = solution_to_list(path_best_solution, instance.number_items)
+    solutions = sols[:]
+    best_obj_val = max(solutions).obj_value
+    best_solution = None
+    enhanced = False
+    while len(solutions) > 1:
 
-    # TODO fix
+        target_sol, start_sol = sorted(list(np.random.choice(solutions, 2, replace=False)))
+        
+        worst_solution_items = solution_to_list(target_sol, instance.number_items)
+        best_solution_items = solution_to_list(start_sol, instance.number_items)
+
+        moves_to_be_made = []
+
+        for item in range(instance.number_items):
+            group_id_best = best_solution_items[item]
+            group_id_worst = worst_solution_items[item]
+            if group_id_worst != group_id_best:
+                moves_to_be_made.append([item, group_id_best, group_id_worst])
+        
+        while len(moves_to_be_made) > 0:
+            best_id = None
+            best_gain_value = -inf
+            for i in range(len(moves_to_be_made)):
+                item, remove_from, add_to = moves_to_be_made[i]
+                
+                lost = 0
+                if start_sol.groups[remove_from].num_items > 1:
+                
+                    lost = float(start_sol.groups[remove_from].items[item])/float(start_sol.groups[remove_from].num_items - 1) 
+
+                gain = 0
+                if start_sol.groups[add_to].num_items > 0:
+                    gain = start_sol.groups[add_to].evaluate_item(item, instance.adj_matrix[item])
+
+                if (gain-lost) > best_gain_value:
+                    best_gain_value = gain - lost
+                    best_id = i
+              
+            item, remove_from, add_to = moves_to_be_made[best_id]
+            
+            start_sol.groups[remove_from].remove_item(item, instance.adj_matrix[item])
+            start_sol.groups[add_to].add_item(item, instance.adj_matrix[item])
+
+            del moves_to_be_made[best_id]
+                
+            if start_sol.is_valid_solution():
+                start_sol.update_obj_value()
+                if start_sol.obj_value > best_obj_val:
+                    best_obj_val = start_sol.obj_value 
+                    best_solution = start_sol.copy()
+                    enhanced = True
+
+        solutions.remove(start_sol)
+        solutions.remove(target_sol)
+    return best_solution.copy(), enhanced
+    
 
 
 def solution_to_list(solution, number_items):
-    solution_list = [-1] * number_items
-    group_bounds = []
-    group_num_items = []
+    solution_list = [None]*number_items
+    solution.groups.sort(key = lambda x: x.id_group)
     for id_group, group in enumerate(solution.groups):
-        group_bounds.append((group.min_items, group.max_items))
-        group_num_items.append(group.num_items)
-        for item in group:
+        for item in group.items:
             solution_list[item] = id_group
-    return solution_list, group_bounds, group_num_items, [True]*len(group_bounds)
-
-
-def list_to_solution(solution_list, group_bounds, diversity_matrix):
-    groups = []
-    for min_bound, max_bound in group_bounds:
-        groups.append(Group(min_bound, max_bound))
-    
-    for item, id_group in enumerate(solution_list):
-        groups[id_group].add_item(item, diversity_matrix[item])
-    
-    return Solution(len(groups), group_bounds, groups)
+    return solution_list
 
 
 def write_to_file(instance_name, reheat, best_solutions, removal_operator, insertion_operator, runtime, itt_global, file):

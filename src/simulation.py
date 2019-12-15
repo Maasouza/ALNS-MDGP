@@ -18,7 +18,7 @@ class Simulation:
         groups = []
         for i in range(self.instance.number_groups):
             lower_bound, upper_bound = self.instance.group_bounds[i]
-            groups.append(Group(lower_bound, upper_bound))
+            groups.append(Group(i, lower_bound, upper_bound))
         
         for item in self.items:
             included = False
@@ -38,7 +38,7 @@ class Simulation:
         groups = []
         for i in range(self.instance.number_groups):
             lower_bound, upper_bound = self.instance.group_bounds[i]
-            groups.append(Group(lower_bound, upper_bound))
+            groups.append(Group(i, lower_bound, upper_bound))
 
         pairs = []
         for i in range(self.instance.number_items-1):
@@ -74,7 +74,7 @@ class Simulation:
         groups = []
         for i in range(self.instance.number_groups):
             lower_bound, upper_bound = self.instance.group_bounds[i]
-            groups.append(Group(lower_bound, upper_bound))
+            groups.append(Group(i, lower_bound, upper_bound))
 
         mean_diversity = []
         for item, item_diversity in enumerate(self.instance.adj_matrix):
@@ -100,7 +100,7 @@ class Simulation:
         groups = []
         for i in range(self.instance.number_groups):
             lower_bound, upper_bound = self.instance.group_bounds[i]
-            groups.append(Group(lower_bound, upper_bound))
+            groups.append(Group(i, lower_bound, upper_bound))
 
         mean_diversity = []
         for item, item_diversity in enumerate(self.instance.adj_matrix):

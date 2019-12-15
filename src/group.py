@@ -1,6 +1,7 @@
 class Group:
     
-    def __init__(self, min_items, max_items):
+    def __init__(self, id_group, min_items, max_items):
+        self.id_group = id_group
         self.min_items = min_items
         self.max_items = max_items
         self.items = dict() # {items: contribution}
@@ -9,11 +10,14 @@ class Group:
         self.best_item = None
         self.worst_item = None
 
+    def bounds(self):
+        return (self.min_items, self.max_items)
+
     def copy(self):
         min_items = self.min_items
         max_items = self.max_items
-        
-        new_group = Group(min_items, max_items)
+        id_group = self.id_group
+        new_group = Group(id_group, min_items, max_items)
 
         new_group.items = self.items.copy()
         

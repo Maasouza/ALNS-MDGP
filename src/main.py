@@ -13,7 +13,7 @@ if __name__ == "__main__":
     files = []
     for r, d, f in os.walk(path):
         for file in f:
-            if any(i in file for i in [ '10_ds_01', '120_ds_01', '120_ss_01', '240_ds_01', '240_ss_01', '480_ds_01', '480_ss_01', '960_ds_01', '960_ss_01' ]):
+            if any(i in file for i in ['10_ds_01', '10_ss_01', '12_ds_01', '12_ss_01', '30_ds_01', '30_ss_01', '60_ds_01', '60_ss_01','120_ds_01', '120_ss_01', '240_ds_01', '240_ss_01', '480_ds_01', '480_ss_01', '960_ds_01', '960_ss_01' ]):
                 files.append(os.path.join(r, file))
 
     files.sort()
@@ -63,18 +63,10 @@ if __name__ == "__main__":
             write_to_file(instance_name, reheat, best_solutions, removal_operator, insertion_operator, elapsed_time, itt_global, instance_name+"_"+str(i)+".out")
 
             # path relink
-            path_relinking(simulation.path_relink_solutions, instance)
+            best_solution_path, enhanced = path_relinking(simulation.path_relink_solutions, instance)
+            if enhanced:
+                with open("../output/pathrelink_"+instance_name+".out", 'w') as f:
+                    f.write("Pathrelinking solution enhanced: "+str(best_solution_path.obj_value))
 
         write_all_itterations(instance_name, opts_info, itts_global, exec_times)
-        a = input()
 
-    # out.append(simulation.current_solution.obj_value)
-    # simulation.greedy_solution_1()
-    # out.append(simulation.current_solution.obj_value)
-    # simulation.greedy_solution_2()
-    # out.append(simulation.current_solution.obj_value)
-    # simulation.greedy_solution_3(True)
-    # out.append(simulation.current_solution.obj_value)
-    # simulation.greedy_solution_3(False)
-    # out.append(simulation.current_solution.obj_value)
-    # print(out)
