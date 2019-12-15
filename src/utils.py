@@ -71,7 +71,7 @@ def path_relinking(sols, instance):
 
         solutions.remove(start_sol)
         solutions.remove(target_sol)
-    return best_solution.copy(), enhanced
+    return best_solution, enhanced
     
 
 
