@@ -17,7 +17,6 @@ if __name__ == "__main__":
                 files.append(os.path.join(r, file))
 
     files.sort()
-    files = [files[0]]
 
     for file in files:
         instance = Instance(file)
