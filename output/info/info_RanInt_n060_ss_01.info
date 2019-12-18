@@ -1,0 +1,10 @@
+Instancia: RanInt_n060_ss_01
+	Avg exec time: 9.555157947540284
+	Avg time to find best: 4.45590529487024
+	Avg exec itts: 15300.0
+	Avg itts to find best: 7127.8
+Best Solutions:
+	Max: 19079.0 on itt: 6211
+	Min: 18699.0
+	Avg: 18960.4
+	StdDev: 140.35326857611832

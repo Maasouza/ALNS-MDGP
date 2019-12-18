@@ -1,0 +1,10 @@
+Instancia: RanReal_n960_ds_01
+	Avg exec time: 2142.8493863105773
+	Avg time to find best: 1904.407162712824
+	Avg exec itts: 30880.0
+	Avg itts to find best: 27524.6
+Best Solutions:
+	Max: 1203415.693 on itt: 43419
+	Min: 1197633.106
+	Avg: 1200456.4937999998
+	StdDev: 2068.5106929295257

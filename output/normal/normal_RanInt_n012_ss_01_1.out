@@ -1,0 +1,16 @@
+Instancia: RanInt_n012_ss_01
+Execution time: 2.317246913909912
+Best solution: 985.0 at itteration 5/15300
+Removal Operators Weight
+	Random - 16.42749335719268
+	Biased Random - 15.727600653998689
+	Greedy Least Contributor - 16.13803181808196
+	Pair Shaw - 17.301226232991482
+	Shaw - 16.068023948023683
+Insertion Operators Weight
+	Random - 18.86010729660602
+	greedy mean diversity max - 18.597975962322586
+	greedy mean diversity min - 18.667953044343264
+	greedy mean diversity best group max - 13.582727655041891
+	greedy mean diversity best group min - 12.61314378432025
+	worst regret - 11.179182206682208

@@ -1,0 +1,10 @@
+Instancia: Geo_n012_ds_01
+	Avg exec time: 2.359167146682739
+	Avg time to find best: 0.6102316224652957
+	Avg exec itts: 15300.0
+	Avg itts to find best: 3998.8
+Best Solutions:
+	Max: 807.677 on itt: 1542
+	Min: 807.677
+	Avg: 807.677
+	StdDev: 0.0

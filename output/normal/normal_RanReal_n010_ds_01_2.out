@@ -1,0 +1,16 @@
+Instancia: RanReal_n010_ds_01
+Execution time: 1.766589879989624
+Best solution: 1437.807 at itteration 356/15300
+Removal Operators Weight
+	Random - 15.006114808721687
+	Biased Random - 15.632039396948597
+	Greedy Least Contributor - 16.244067595512576
+	Pair Shaw - 17.07347033910626
+	Shaw - 15.02905466490296
+Insertion Operators Weight
+	Random - 15.831040633611055
+	greedy mean diversity max - 20.609114155432152
+	greedy mean diversity min - 19.853919328800025
+	greedy mean diversity best group max - 9.451884329121174
+	greedy mean diversity best group min - 9.572033064974237
+	worst regret - 8.155804750804748

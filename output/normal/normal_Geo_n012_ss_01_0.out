@@ -1,0 +1,16 @@
+Instancia: Geo_n012_ss_01
+Execution time: 2.5221617221832275
+Best solution: 716.463 at itteration 1352/15300
+Removal Operators Weight
+	Random - 22.315417916735342
+	Biased Random - 21.340775336081645
+	Greedy Least Contributor - 19.980408817333444
+	Pair Shaw - 22.729721399729588
+	Shaw - 21.78227522365667
+Insertion Operators Weight
+	Random - 23.024518269633372
+	greedy mean diversity max - 22.69891530586305
+	greedy mean diversity min - 22.26231044857387
+	greedy mean diversity best group max - 21.001144204952254
+	greedy mean diversity best group min - 21.114492579218997
+	worst regret - 19.628726422879403
