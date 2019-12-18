@@ -50,16 +50,14 @@ class Simulation:
         select_group = 0
         for i, j, _ in pairs:
             if i not in used_items:
-                if groups[select_group].add_item_if_viable(i, self.instance.adj_matrix[i]):
-                    used_items.add(i)
-                else:
+                while not groups[select_group].add_item_if_viable(i, self.instance.adj_matrix[i]):
                     select_group+=1
+                used_items.add(i)
 
             if j not in used_items:
-                if groups[select_group].add_item_if_viable(j, self.instance.adj_matrix[j]):
-                    used_items.add(j)
-                else:
+                while not groups[select_group].add_item_if_viable(j, self.instance.adj_matrix[j]):
                     select_group+=1
+                used_items.add(j)
         
         self.current_solution = Solution(self.instance.number_groups, self.instance.group_bounds, groups)
        
