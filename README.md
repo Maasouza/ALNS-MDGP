@@ -67,7 +67,7 @@ Format:
 
 - Single Execution Best Results  
 Format:  
-`run_itts_and_bests_<<intance name>>_<<itteration>>.out` or
+`run_itts_and_bests_<<intance name>>_<<itteration>>.out` or  
 `reheat_run_itts_and_bests_<<intance name>>_<<itteration>>.out`
 
             itt_0 best_0
