@@ -82,8 +82,9 @@ if __name__ == "__main__":
             # Path-relinking execution.
             best_solution_path, enhanced = path_relinking(simulation.path_relink_solutions, instance)
             if enhanced:
-                with open("../output/pathrelink_"+instance_name+"_"+str(i)+".out", 'w') as f:
+                alns_type = "reheat_" if reheat else ""
+                with open("../output/"+alns_type+"pathrelink_"+instance_name+"_"+str(i)+".out", 'w') as f:
                     f.write("Pathrelinking solution enhanced: "+str(best_solution_path.obj_value))
 
         # Save best results from all repetitions.
-        write_all_itterations(instance_name, opts_info, itts_global, exec_times)
+        write_all_itterations(instance_name, reheat, opts_info, itts_global, exec_times)

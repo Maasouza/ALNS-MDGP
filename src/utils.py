@@ -85,8 +85,8 @@ def solution_to_list(solution, number_items):
 
 
 def write_to_file(instance_name, reheat, best_solutions, removal_operator, insertion_operator, runtime, itt_global, file):
-    alns_type = "reheat" if reheat else "normal"
-    with open("../output/"+alns_type+"_"+file,'w') as f:
+    alns_type = "reheat_" if reheat else ""
+    with open("../output/"+alns_type+"run_"+file,'w') as f:
         f.write("Instancia: " + instance_name)
         f.write("\nExecution time: " + str(runtime))
         f.write("\nBest solution: " + str(best_solutions[-1][0]) + " at itteration " + str(best_solutions[-1][1]) + "/" + str(itt_global))
@@ -97,11 +97,11 @@ def write_to_file(instance_name, reheat, best_solutions, removal_operator, inser
         for name, weight in insertion_operator:
             f.write("\n\t" + name + " - " + str(weight))
 
-    with open("../output/best_solutions_"+alns_type+"_"+file,'w') as f:
+    with open("../output/"+alns_type+"run_itts_and_bests_"+file,'w') as f:
         for obj_val, itt in best_solutions:
             f.write("\n"+str(itt)+" "+str(obj_val))
 
-def write_all_itterations(instance_name, opts_info, itts_global, exec_times):
+def write_all_itterations(instance_name, reheat, opts_info, itts_global, exec_times):
     itt_average_time = []
     for idx in range(len(exec_times)):
         itt_average_time.append(exec_times[idx]/itts_global[idx])
@@ -131,7 +131,8 @@ def write_all_itterations(instance_name, opts_info, itts_global, exec_times):
         if opts_info[idx][0] < opt_min:
             opt_min = opts_info[idx][0]
 
-    with open('../output/info_' + instance_name + '.info', 'w') as f:
+    alns_type = "reheat_" if reheat else ""
+    with open('../output/info_' + alns_type + instance_name + '.info', 'w') as f:
         f.write('Instancia: ' + instance_name)
         f.write('\n\tAvg exec time: ' + str(np.mean(exec_times)))
         f.write('\n\tAvg time to find best: ' + str(sum_avg_time_found_best/len(exec_times)))
