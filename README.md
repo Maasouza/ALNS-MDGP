@@ -5,7 +5,7 @@ This repository refers to the final work of the discipline: **CPS783 - Metaheuri
 
 **Students:**
 
-* [Márcio William](https://github.com/~)
+* [Márcio William](https://github.com/suwilliam-nit)
 * [Marcos Aurélio C de S Filho](https://github.com/Maasouza)
 * [Rafael G Damasceno](https://github.com/DamascenoRafael)
 
@@ -24,3 +24,56 @@ The algorithm can be run through the file `src/main.py`, where there are comment
 In the `data` directory you can find some problems that can be executed by the algorithms. The `output` folder will store the algorithm execution results.
 
 In the `src/notebooks for plotting` folder are the [Jupyter Notebook](https://jupyter.org/) files that can be used to plot the results.
+
+## Outputs
+
+- Execution Summary Output  
+Format:  
+`info_<<intance name>>.info` or  
+`info_reheat_<<instance name>>.info`
+            
+            Instancia: Instance Name
+                Avg exec time: 1234.56 
+                Avg time to find best: 123.45
+                Avg exec itts: 1000
+                Avg itts to find best: 100
+            Best Solutions:
+                Max: 12345.678 on itt: 123
+                Min: 10000.000
+                Avg: 1234.567
+                StdDev: 123.45
+
+- Single Execution Output  
+Format:  
+`run_<<intance name>>_<<itteration>>.out` or  
+`reheat_run_<<intance name>>_<<itteration>>.out`
+
+            Instancia: Instance Name
+            Execution time: 123.456
+            Best solution: 123456.789 at itteration 123/1234
+            Removal Operators Weight
+                Random - 123
+                Biased Random - 123
+                Greedy Least Contributor - 123
+                Pair Shaw - 123
+                Shaw - 123
+            Insertion Operators Weight
+                Random - 123
+                greedy mean diversity max - 123
+                greedy mean diversity min - 123
+                greedy mean diversity best group max - 123 
+                greedy mean diversity best group min - 123
+                worst regret - 123 
+
+- Single Execution Best Results  
+Format:  
+`run_itts_and_bests_<<intance name>>_<<itteration>>.out` or
+`reheat_run_itts_and_bests_<<intance name>>_<<itteration>>.out`
+
+            itt_0 best_0
+            itt_1 best_1
+            .
+            .
+            .
+            itt_n best_n
+
